@@ -618,4 +618,46 @@ window.addEventListener('load', () => {
 
     // 在初始化时显示高分榜
     displayHighScores();
+
+    // 在初始化代码后添加触摸控制
+    function initTouchControls() {
+        // 防止双击缩放
+        document.addEventListener('touchstart', function(e) {
+            if(e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 阻止默认滚动行为
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        // 添加触控按钮事件
+        const buttons = {
+            'leftBtn': { key: 'ArrowLeft' },
+            'rightBtn': { key: 'ArrowRight' },
+            'downBtn': { key: 'ArrowDown' },
+            'rotateBtn': { key: 'ArrowUp' },
+            'pauseBtn': { key: ' ' }
+        };
+
+        Object.entries(buttons).forEach(([btnId, keyInfo]) => {
+            const btn = document.getElementById(btnId);
+            if (btn) {
+                ['touchstart', 'mousedown'].forEach(eventType => {
+                    btn.addEventListener(eventType, (e) => {
+                        e.preventDefault();
+                        const event = new KeyboardEvent('keydown', {
+                            key: keyInfo.key
+                        });
+                        document.dispatchEvent(event);
+                    });
+                });
+            }
+        });
+    }
+
+    // 在游戏初始化时调用
+    initTouchControls();
 });
