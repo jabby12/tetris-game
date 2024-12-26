@@ -2,16 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>俄罗斯方块</title>
     <style>
         body {
             margin: 0;
             background-color: #1a2639;
             font-family: Arial, sans-serif;
-            min-height: 100vh;
         }
-
         .game-container {
             display: flex;
             flex-direction: row;
@@ -19,320 +17,191 @@
             justify-content: center;
             align-items: flex-start;
             padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
         }
-
         .game-info {
             background: #2c3e50;
             padding: 20px;
             border: 2px solid #34495e;
             width: 200px;
             color: #ecf0f1;
-            border-radius: 8px;
         }
-
         canvas {
             border: 2px solid #34495e;
-            border-radius: 8px;
             background-color: #2c3e50;
         }
-
         .next-piece {
             width: 120px;
             height: 120px;
             border: 1px solid #34495e;
             margin: 10px 0;
-            background-color: #34495e;
-            border-radius: 4px;
         }
-
         .button {
             background-color: #3498db;
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 4px;
             cursor: pointer;
             width: 100%;
             margin: 5px 0;
-            transition: background-color 0.3s;
         }
-
-        .button:hover {
-            background-color: #2980b9;
-        }
-
-        .controls {
+        .game-over-overlay {
             display: none;
-            width: 100%;
-            max-width: 400px;
-            padding: 10px;
-        }
-
-        .control-row {
-            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
             justify-content: center;
-            gap: 10px;
-            margin: 5px 0;
+            align-items: center;
         }
-
-        .control-btn {
+        .game-over-content {
+            background: #2c3e50;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: #ecf0f1;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            min-width: 300px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .game-over-content h2 {
+            margin: 0 0 20px 0;
+            color: #e74c3c;
+            font-size: 28px;
+        }
+        .final-score {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #f1c40f;
+        }
+        .game-stats {
+            margin: 20px 0;
+            padding: 15px;
+            background: #34495e;
+            border-radius: 5px;
+        }
+        .game-stats div {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .game-over-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .game-over-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .game-over-button:hover {
+            transform: scale(1.05);
+        }
+        .restart-button {
+            background: #2ecc71;
+            color: white;
+        }
+        .menu-button {
+            background: #3498db;
+            color: white;
+        }
+        .mobile-controls {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            text-align: center;
+            z-index: 100;
+        }
+        .mobile-controls button {
             width: 60px;
             height: 60px;
-            background: #3498db;
+            margin: 5px;
             border: none;
             border-radius: 50%;
+            background: rgba(52, 152, 219, 0.8);
             color: white;
             font-size: 24px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .mobile-controls button:active {
+            background: rgba(41, 128, 185, 0.9);
+            transform: scale(0.95);
+        }
+        .direction-controls {
+            margin-bottom: 10px;
+        }
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: block;
+            }
+            .game-container {
+                margin-bottom: 180px;
+            }
+        }
+        .mobile-instructions {
+            display: none;
+            background: rgba(44, 62, 80, 0.9);
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px auto;
+            max-width: 300px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .mobile-instructions h3 {
+            margin: 0 0 10px 0;
+            color: #3498db;
+            text-align: center;
+        }
+
+        .mobile-instructions ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: none;
+        }
+
+        .mobile-instructions li {
+            margin: 5px 0;
             display: flex;
             align-items: center;
-            justify-content: center;
-            opacity: 0.8;
-            touch-action: manipulation;
+            gap: 10px;
         }
 
-        .control-btn:active {
-            opacity: 1;
+        .mobile-instructions .gesture-icon {
+            color: #f1c40f;
+            font-size: 16px;
+            min-width: 20px;
         }
 
-        .high-scores {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #34495e;
-            border-radius: 4px;
-        }
-
-        .high-scores h3 {
-            margin-top: 0;
-            color: #3498db;
-        }
-
-        .score-list {
-            padding: 0;
-            list-style: none;
-        }
-
-        .score-list li {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
-            font-size: 14px;
-        }
-
-        .instructions {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #34495e;
-            border-radius: 4px;
-            clear: both;
-        }
-
-        .instructions > p {
-            margin: 5px 0;
-            color: #3498db;
-            font-weight: bold;
-        }
-
-        .pc-controls, .mobile-controls {
-            margin: 5px 0;
-        }
-
-        .pc-controls p, .mobile-controls p {
-            color: #3498db;
-            margin: 5px 0;
-        }
-
-        .pc-controls ul, .mobile-controls ul {
-            margin: 5px 0;
-            padding-left: 20px;
-        }
-
-        /* 移动端显示规则调整 */
         @media (max-width: 768px) {
-            .pc-controls {
-                display: none !important;  /* 强制隐藏PC说明 */
-            }
-            
-            .mobile-controls {
-                display: block !important;  /* 强制显示移动端说明 */
-            }
-
-            .instructions {
-                margin: 10px 0;
-                padding: 8px;
-                font-size: 14px;
-            }
-
-            .mobile-controls ul li {
-                margin: 4px 0;
-            }
-        }
-
-        /* PC端显示规则 */
-        @media (min-width: 769px) {
-            .mobile-controls {
-                display: none !important;
-            }
-            
-            .pc-controls {
-                display: block !important;
-            }
-        }
-
-        /* 在电脑端隐藏手机操作说明 */
-        @media (min-width: 769px) {
-            .mobile-controls {
-                display: none;
-            }
-        }
-
-        /* 移动端适配 */
-        @media (max-width: 768px) {
-            .game-container {
-                flex-direction: column;
-                align-items: center;
-                padding: 10px;
-                gap: 10px;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
             .pc-controls {
                 display: none;
             }
-
-            canvas#tetris {
-                width: 85vw;
-                height: 170vw;
-                max-width: 400px;
-                max-height: 800px;
-            }
-
-            .game-info {
-                width: 85vw;
-                max-width: 400px;
-                margin: 10px auto;
-                padding: 10px;
-                box-sizing: border-box;
-                font-size: 14px;
-            }
-
-            .game-info h2 {
-                font-size: 18px;
-                margin: 5px 0;
-            }
-
-            .game-info p, 
-            .game-info li {
-                font-size: 14px;
-                margin: 5px 0;
-            }
-
-            .next-piece {
-                width: 80px;
-                height: 80px;
-                margin: 5px auto;
-            }
-
-            .controls {
+            .mobile-instructions {
                 display: block;
-                width: 85vw;
-                max-width: 400px;
-                padding: 5px;
-                margin: 0 auto;
-            }
-
-            .control-row {
-                gap: 15px;
-                margin: 10px 0;
-            }
-
-            .control-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-                min-width: 40px;
-                min-height: 40px;
-            }
-
-            .high-scores,
-            .instructions {
-                padding: 8px;
-                margin-top: 10px;
-            }
-
-            .score-list li {
-                font-size: 12px;
-            }
-        }
-
-        /* 横屏适配 */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .game-container {
-                flex-direction: row;
-                justify-content: center;
-                align-items: flex-start;
-                padding: 5px;
-                height: 100vh;
-                overflow-y: auto;
-            }
-
-            canvas#tetris {
-                width: 40vh;
-                height: 80vh;
-                margin: 5px;
-            }
-
-            .game-info {
-                width: 40vh;
-                height: 80vh;
-                overflow-y: auto;
-                margin: 5px;
-                padding: 10px;
-                font-size: 12px;
-            }
-
-            .controls {
-                position: fixed;
-                right: 5px;
-                bottom: 5px;
-                width: auto;
-                background: rgba(44, 62, 80, 0.8);
-                padding: 5px;
-                border-radius: 8px;
-            }
-
-            .control-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-        }
-
-        /* 超小屏幕适配 */
-        @media (max-width: 320px) {
-            .game-container {
-                padding: 2px;
-            }
-
-            .game-info {
-                padding: 8px;
-            }
-
-            .game-info h2 {
-                font-size: 16px;
-            }
-
-            .game-info p, 
-            .game-info li {
-                font-size: 12px;
-            }
-
-            .control-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
             }
         }
     </style>
@@ -341,53 +210,63 @@
     <div class="game-container">
         <canvas id="tetris" width="300" height="600"></canvas>
         <div class="game-info">
-            <h2>游戏信���</h2>
+            <h2>游戏信息</h2>
             <p>分数: <span id="score">0</span></p>
             <p>等级: <span id="level">1</span></p>
-            <p>时间: <span id="timer">00:00</span></p>
             <p>下一个方块:</p>
             <canvas id="nextPiece" class="next-piece" width="120" height="120"></canvas>
             <button id="restartButton" class="button">重新开始</button>
-            <div class="high-scores">
-                <h3>最高分</h3>
-                <ul id="highScores" class="score-list"></ul>
+            
+            <!-- PC端操作说明 -->
+            <div class="pc-controls">
+                <p>操作说明:</p>
+                <ul>
+                    <li>←→: 左右移动</li>
+                    <li>↑: 旋转</li>
+                    <li>↓: 加速下落</li>
+                    <li>空格: 暂停</li>
+                </ul>
             </div>
-            <div class="instructions">
-                <p>操作说明</p>
-                <div class="pc-controls">
-                    <p>电脑端：</p>
-                    <ul>
-                        <li>←→: 左右移动</li>
-                        <li>↑: 旋转</li>
-                        <li>↓: 加速下落</li>
-                        <li>空格: 暂停</li>
-                    </ul>
-                </div>
-                <div class="mobile-controls">
-                    <p>手机端：</p>
-                    <ul>
-                        <li>点击 ← → 按钮: 左右移动</li>
-                        <li>点击 ↻ 按钮: 旋转方块</li>
-                        <li>点击 ↓ 按钮: 加速下落</li>
-                        <li>点击 ⏸ 按钮: 暂停游戏</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="controls">
-            <div class="control-row">
-                <button class="control-btn" id="rotateBtn">↻</button>
-            </div>
-            <div class="control-row">
-                <button class="control-btn" id="leftBtn">←</button>
-                <button class="control-btn" id="downBtn">↓</button>
-                <button class="control-btn" id="rightBtn">→</button>
-            </div>
-            <div class="control-row">
-                <button class="control-btn" id="pauseBtn">⏸</button>
+            
+            <!-- 移动端操作说明 -->
+            <div class="mobile-instructions">
+                <h3>触屏操作说明</h3>
+                <ul>
+                    <li><span class="gesture-icon">←→</span> 左右滑动移动方块</li>
+                    <li><span class="gesture-icon">↑</span> 上滑旋转方块</li>
+                    <li><span class="gesture-icon">↓</span> 下滑快速下落</li>
+                    <li><span class="gesture-icon">⊙</span> 点击按钮控制</li>
+                </ul>
             </div>
         </div>
     </div>
+
+    <div class="mobile-controls">
+        <div class="direction-controls">
+            <button id="rotateBtn">↻</button>
+            <button id="leftBtn">←</button>
+            <button id="rightBtn">→</button>
+            <button id="downBtn">↓</button>
+        </div>
+    </div>
+
+    <!-- 游戏结束界面 -->
+    <div class="game-over-overlay">
+        <div class="game-over-content">
+            <h2>游戏结束</h2>
+            <div class="final-score">得分: <span id="finalScore">0</span></div>
+            <div class="game-stats">
+                <div>消除行数: <span id="finalLines">0</span></div>
+                <div>达到等级: <span id="finalLevel">1</span></div>
+                <div>游戏时长: <span id="gameTime">00:00</span></div>
+            </div>
+            <div class="game-over-buttons">
+                <button class="game-over-button restart-button" id="gameOverRestartBtn">再玩一次</button>
+                <button class="game-over-button menu-button" id="gameOverMenuBtn">返回菜单</button>
+            </div>
+        </div>
+    </div>
+
     <script src="game.js"></script>
 </body>
 </html>
