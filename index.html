@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>俄罗斯方块</title>
+    <style>
+        .game-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: start;
+            padding-top: 50px;
+        }
+        .game-info {
+            background: #2c3e50;
+            padding: 20px;
+            border: 2px solid #34495e;
+            width: 200px;
+            color: #ecf0f1;
+            border-radius: 8px;
+        }
+        canvas {
+            border: 2px solid #34495e;
+            border-radius: 8px;
+            background-color: #2c3e50;
+        }
+        body {
+            margin: 0;
+            background-color: #1a2639;
+            font-family: Arial, sans-serif;
+        }
+        .next-piece {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #34495e;
+            margin: 10px 0;
+            background-color: #34495e;
+            border-radius: 4px;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .high-scores {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #34495e;
+            border-radius: 4px;
+        }
+        .high-scores h3 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .score-list {
+            padding: 0;
+            list-style: none;
+        }
+        .score-list li {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="tetris" width="300" height="600"></canvas>
+        <div class="game-info">
+            <h2>游戏信息</h2>
+            <p>分数: <span id="score">0</span></p>
+            <p>等级: <span id="level">1</span></p>
+            <p>时间: <span id="timer">00:00</span></p>
+            <p>下一个方块:</p>
+            <canvas id="nextPiece" class="next-piece" width="120" height="120"></canvas>
+            <button id="restartButton" class="button">重新开始</button>
+            <div class="high-scores">
+                <h3>最高分</h3>
+                <ul id="highScores" class="score-list">
+                    <!-- 高分记录将在这里动态添加 -->
+                </ul>
+            </div>
+            <p>操作说明:</p>
+            <ul>
+                <li>←→: 左右移动</li>
+                <li>↑: 旋转</li>
+                <li>↓: 加速下落</li>
+                <li>空格: 暂停</li>
+            </ul>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
