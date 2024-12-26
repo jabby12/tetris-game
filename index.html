@@ -125,15 +125,59 @@
             padding: 10px;
             background-color: #34495e;
             border-radius: 4px;
+            clear: both;
         }
 
-        .instructions p {
+        .instructions > p {
             margin: 5px 0;
             color: #3498db;
+            font-weight: bold;
         }
 
         .pc-controls, .mobile-controls {
             margin: 5px 0;
+        }
+
+        .pc-controls p, .mobile-controls p {
+            color: #3498db;
+            margin: 5px 0;
+        }
+
+        .pc-controls ul, .mobile-controls ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        /* 移动端显示规则调整 */
+        @media (max-width: 768px) {
+            .pc-controls {
+                display: none !important;  /* 强制隐藏PC说明 */
+            }
+            
+            .mobile-controls {
+                display: block !important;  /* 强制显示移动端说明 */
+            }
+
+            .instructions {
+                margin: 10px 0;
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .mobile-controls ul li {
+                margin: 4px 0;
+            }
+        }
+
+        /* PC端显示规则 */
+        @media (min-width: 769px) {
+            .mobile-controls {
+                display: none !important;
+            }
+            
+            .pc-controls {
+                display: block !important;
+            }
         }
 
         /* 在电脑端隐藏手机操作说明 */
@@ -297,7 +341,7 @@
     <div class="game-container">
         <canvas id="tetris" width="300" height="600"></canvas>
         <div class="game-info">
-            <h2>游戏信息</h2>
+            <h2>游戏信���</h2>
             <p>分数: <span id="score">0</span></p>
             <p>等级: <span id="level">1</span></p>
             <p>时间: <span id="timer">00:00</span></p>
@@ -309,7 +353,7 @@
                 <ul id="highScores" class="score-list"></ul>
             </div>
             <div class="instructions">
-                <p>操作说明:</p>
+                <p>操作说明</p>
                 <div class="pc-controls">
                     <p>电脑端：</p>
                     <ul>
@@ -320,12 +364,12 @@
                     </ul>
                 </div>
                 <div class="mobile-controls">
-                    <p>手机���：</p>
+                    <p>手机端：</p>
                     <ul>
-                        <li>← →: 左右滑动</li>
-                        <li>↻: 旋转方块</li>
-                        <li>↓: 加速下落</li>
-                        <li>⏸: 暂停游戏</li>
+                        <li>点击 ← → 按钮: 左右移动</li>
+                        <li>点击 ↻ 按钮: 旋转方块</li>
+                        <li>点击 ↓ 按钮: 加速下落</li>
+                        <li>点击 ⏸ 按钮: 暂停游戏</li>
                     </ul>
                 </div>
             </div>
